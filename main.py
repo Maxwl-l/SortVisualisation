@@ -1,6 +1,6 @@
 import sys
-from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
+from matplotlib import colors, pyplot as plt
+import time
 
 plt.style.use('seaborn-v0_8-darkgrid')
 
@@ -25,14 +25,53 @@ def main():
     plt.bar(range(len(numbers)), numbers, color='blue')
     plt.show(block=False)
 
-    yesorno = input("\nDo you want to sort the numbers? (Y/N): ")
-    if yesorno == 'Y':
+    sort = input("\nSelect a sorting algorithm to use (Bubble Sort/Merge Sort/Insertion Sort): ")
+    if sort == 'Bubble Sort':
         bubble_sort(numbers)
+    elif sort == 'Merge Sort':
+        #merge_sort(numbers)
+        return
+    elif sort == 'Insertion Sort':
+        insertion_sort(numbers)
+        return
     else:
-        sys.exit("Exiting the program.")
+        sys.exit("Invalid sorting algorithm selected.")
         
 
+def insertion_sort(list):
+    start = time.perf_counter()
+    n = len(list)
+    swapnum = 0
+    for i in range(1, n):
+        j = i
+        while j > 0 and list[j] < list[j - 1]:
+            temp = list[j]
+            list[j] = list[j - 1]
+            list[j - 1] = temp
+            print("--------One swap completed.--------")
+            swapnum += 1
+            j -= 1
+
+            colors = ['blue'] * len(list)
+            colors[j] = 'red'
+            plt.clf()
+            plt.bar(range(len(list)), list, color=colors)
+            plt.pause(0.1)
+
+    elapsed = time.perf_counter() - start
+    for i in list:
+        print(i, end =' ')
+
+    print("\nElapsed time: ", elapsed, "seconds")
+    print("total swaps: ", swapnum)
+
+    plt.clf()
+    plt.bar(range(len(list)), list, color='blue')
+    plt.show()
+    
+
 def bubble_sort(list):
+    start = time.perf_counter()
     n = len(list)
     sorted = False
     passnum = 0
@@ -57,9 +96,11 @@ def bubble_sort(list):
         print("--------One pass completed.--------")
         passnum += 1
 
+    elapsed = time.perf_counter() - start
     for i in list:
         print(i, end =' ')
 
+    print("\nElapsed time: ", elapsed, "seconds")
     print("total passes: ", passnum)
     print("total swaps: ", swapnum)
 
