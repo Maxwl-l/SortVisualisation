@@ -1,1 +1,1 @@
-A bubble sort along with a visual representation of the sort happening using matplotlib.
+Using matplotlib to create a visual of different sorts when given a set of numbers.
