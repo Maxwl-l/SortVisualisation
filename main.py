@@ -29,7 +29,7 @@ def main():
     if sort == 'Bubble Sort':
         bubble_sort(numbers)
     elif sort == 'Merge Sort':
-        #merge_sort(numbers)
+        merge_sort(numbers)
         return
     elif sort == 'Insertion Sort':
         insertion_sort(numbers)
@@ -68,8 +68,112 @@ def insertion_sort(list):
     plt.clf()
     plt.bar(range(len(list)), list, color='blue')
     plt.show()
-    
 
+
+def draw(arr, k, lo, hi):
+    colors = ['blue'] * len(arr)
+    for x in range(lo, hi):
+        colors[x] = 'orange'   # the section currently being merged
+    colors[k] = 'red'          # the position just written
+    plt.clf()
+    plt.bar(range(len(arr)), arr, color=colors)
+    plt.pause(0.1)
+
+
+def merge_sort(arr):
+    start = time.perf_counter()
+    stats = {"merges": 0, "writes": 0}
+
+    merge_sort_range(arr, 0, len(arr), stats)
+
+    elapsed = time.perf_counter() - start
+    for i in arr:
+        print(i, end=' ')
+
+    print("\nElapsed time: ", elapsed, "seconds")
+    print("total merges: ", stats["merges"])
+    print("total writes: ", stats["writes"])
+
+    plt.clf()
+    plt.bar(range(len(arr)), arr, color='blue')
+    plt.show()
+
+
+def merge_sort_range(arr, lo, hi, stats):
+    # sorts arr[lo:hi] in place
+    if hi - lo <= 1:
+        return
+
+    mid = (lo + hi) // 2
+    merge_sort_range(arr, lo, mid, stats)
+    merge_sort_range(arr, mid, hi, stats)
+    merge(arr, lo, mid, hi, stats)
+
+
+def merge(arr, lo, mid, hi, stats):
+    left = arr[lo:mid]
+    right = arr[mid:hi]
+    i = j = 0
+    k = lo
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            arr[k] = left[i]
+            i += 1
+        else:
+            arr[k] = right[j]
+            j += 1
+        stats["writes"] += 1
+        draw(arr, k, lo, hi)
+        k += 1
+
+    while i < len(left):
+        arr[k] = left[i]
+        i += 1
+        stats["writes"] += 1
+        draw(arr, k, lo, hi)
+        k += 1
+
+    while j < len(right):
+        arr[k] = right[j]
+        j += 1
+        stats["writes"] += 1
+        draw(arr, k, lo, hi)
+        k += 1
+
+    stats["merges"] += 1
+    print("--------One merge completed.--------")
+
+    # def merge_sort(list):
+    #     start = time.perf_counter()
+    #     n = len(list)
+    #     if n <= 1:
+    #         return
+
+    #     leftlist = merge_sort(list[:n//2])
+    #     rightlist = merge_sort(list[n//2:])
+
+    #     return merge(leftlist, rightlist)
+
+
+    # def merge(lista, listb):
+    #     listc = []
+
+    #     while len(lista) > 0 and len(listb) > 0:
+    #         if(lista[0] > listb[0]):
+    #             listc.append(listb.pop(0))
+    #         else:
+    #             listc.append(lista.pop(0))
+
+    #     while len(lista) > 0:
+    #         listc.append(lista.pop(0))
+
+    #     while len(listb) > 0:
+    #         listc.append(listb.pop(0))
+
+    #     return listc
+
+    
 def bubble_sort(list):
     start = time.perf_counter()
     n = len(list)
